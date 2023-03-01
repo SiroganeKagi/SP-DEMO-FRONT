@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>春晚节目单</title>
+  <link rel="stylesheet" href="./SP-IMS.css" type="text/css" />
+  <!-- 引入样式 -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css" />
+  <!-- 挂载vue -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+  <!-- 引入组件库 -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <!-- 挂载axios -->
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+
+<body>
+  <div class="content" id="app">
+    <h1>2023春节联欢晚会节目单</h1>
+    <button class="btn" @click="showForm1 = true">新增</button>
+    <h2 v-show="showForm1">添加</h2>
+    <div class="hidden-form" v-show="showForm1">
+      <select class="newtype" name="hidden-jiemu" v-model="typeIdNew" >
+        <option selected disabled value=null>请选择</option>
+        <option value="1">歌舞</option>
+        <option value="2">戏曲</option>
+        <option value="3">小品</option>
+        <option value="4">相声</option>
+        <option value="5">武术</option>
+        <option value="6">其他</option>
+      </select>
+      <input class="newName" type="text" v-model="nameNew" placeholder="请输入名称"/>
+      <input class="newData" type="text" v-model="actorNameNew" placeholder="请输入演员名称" />
+      <input class="newData" type="text" v-model="pointNew" placeholder="请输入看点" />
+      <button class="btn" id = "btnQD"@click="add(typeIdNew,nameNew,actorNameNew,pointNew)">确定</button>
+    </div>
+    <div class="search-area">
+      <h2>查询条件</h2>
+      <div class="search-box">
+        <div class="onebox">
+          <span>类别</span>
+          <select name="jiemu" v-model="typeId" >
+            <option selected disabled value=null>请选择</option>
+            <option value="0">全部</option>
+            <option value="1">歌舞</option>
+            <option value="2">戏曲</option>
+            <option value="3">小品</option>
+            <option value="4">相声</option>
+            <option value="5">武术</option>
+            <option value="6">其他</option>
+          </select>
+        </div>
+        <div class="onebox">
+          <span>参演人数</span>
+          <input v-model="num" type="radio" name="number" value="0" />全部
+          <input v-model="num" type="radio" name="number" value="1" /> 1人
+          <input v-model="num" type="radio" name="number" value="2" /> 2人
+          <input v-model="num" type="radio" name="number" value="3" /> 3人及以上
+        </div>
+        <div class="onebox">
+          <span>节目名</span>
+          <input v-model="name" type="text" class="name" name="jiemu-name" placeholder="请输入节目名"/>
+        </div>
+        <div class="onebox" id="rightbox">
+          <input type="submit" class="btn" id="search" value="搜索" @click="search(typeId, num, name)"/>
+        </div>
+      </div>
+      <h2 v-show="showForm2">编辑</h2>
+      <div class="hidden-form" v-show="showForm2">
+        <select class="newtype" name="hidden-jiemu" v-model="typeIdUp" >
+          <option selected disabled value=null>请选择</option>
+          <option value="1">歌舞</option>
+          <option value="2">戏曲</option>
+          <option value="3">小品</option>
+          <option value="4">相声</option>
+          <option value="5">武术</option>
+          <option value="6">其他</option>
+        </select>
+        <input class="newName" type="text" v-model="nameUp" placeholder="请输入名称"/>
+        <input class="newData" type="text" v-model="actorNameUp" placeholder="请输入演员名称" />
+        <input class="newData" type="text" v-model="pointUp" placeholder="请输入看点" />
+        <button class="btn" id = "btnQD"@click="update(typeIdUp,nameUp,actorNameUp,pointUp)">确定</button>
+      </div>
+      <div class="result-area">
+        <h2>搜索结果</h2>
+        <div class="result-content">
+          <div id="app1">
+            <template>
+              <el-table :data="tableData" style="width: 100%">
+                <el-table-column fixed="left" type="index" label="id" width="50">
+                </el-table-column>
+                <el-table-column prop="typeName" label="类别" width="60">
+                </el-table-column>
+                <el-table-column prop="name" label="节目名" width="130">
+                </el-table-column>
+                <el-table-column prop="actorName" label="出演者" width="200">
+                  <li></li>
+                </el-table-column>
+                <el-table-column prop="view" label="看点" width="220">
+                </el-table-column>
+                <el-table-column fixed="right" label="操作" width="100">
+                  <template slot-scope="scope">
+                    <el-button @click="deleteConfirm(scope.row)" type="text" size="small" >删除</el-button>
+                    <el-button @click="showForm2 = true,handleClick(scope.row)" type="text" size="small" >编辑</el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <el-pagination background layout="prev, pager, next" :total="40" @prev-click="pageChange"
+                @next-click="pageChange" @current-change="pageChange">
+              </el-pagination>
+            </template>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<script src="./SP-IMS.js"></script>
+
+</html>
